@@ -68,6 +68,7 @@
                 <div class="hidden lg:flex items-center space-x-6">
                     <a href="#beranda" class="text-emerald-light hover:text-gold-accent font-medium transition-colors duration-200">Beranda</a>
                     <a href="#sambutan" class="text-white/80 hover:text-gold-accent font-medium transition-colors duration-200">Sambutan</a>
+                    <a href="#berita" class="text-white/80 hover:text-gold-accent font-medium transition-colors duration-200">Berita</a>
                     <a href="#legalitas" class="text-white/80 hover:text-gold-accent font-medium transition-colors duration-200">Profil</a>
                     <a href="#visimisi" class="text-white/80 hover:text-gold-accent font-medium transition-colors duration-200">Visi & Misi</a>
                     <a href="#pilar" class="text-white/80 hover:text-gold-accent font-medium transition-colors duration-200">Program</a>
@@ -87,6 +88,7 @@
             <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3 text-center">
                 <a href="#beranda" class="block text-white py-2.5 px-4 hover:bg-emerald-medium rounded-lg">Beranda</a>
                 <a href="#sambutan" class="block text-white py-2.5 px-4 hover:bg-emerald-medium rounded-lg">Sambutan</a>
+                <a href="#berita" class="block text-white py-2.5 px-4 hover:bg-emerald-medium rounded-lg">Berita Terbaru</a>
                 <a href="#legalitas" class="block text-white py-2.5 px-4 hover:bg-emerald-medium rounded-lg">Profil & Legalitas</a>
                 <a href="#visimisi" class="block text-white py-2.5 px-4 hover:bg-emerald-medium rounded-lg">Visi & Misi</a>
                 <a href="#pilar" class="block text-white py-2.5 px-4 hover:bg-emerald-medium rounded-lg">Pilar Unggulan</a>
@@ -182,6 +184,19 @@
         </div>
     </section>
 
+    <section id="berita" class="py-20 bg-white border-b border-gray-100">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-emerald-deep font-semibold text-sm tracking-wider uppercase bg-emerald-soft px-3 py-1 rounded-md inline-block">Seputar Sekolah</span>
+                <h2 class="mt-2 text-3xl md:text-4xl font-serif-custom font-bold text-gray-900">Berita & Artikel Terbaru</h2>
+                <div class="w-16 h-1 bg-gold-accent mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <div id="blog-container" class="space-y-10">
+                <div class="text-center text-gray-400 text-sm py-4">Memuat kabar berita...</div>
+            </div>
+        </div>
+    </section>
     <section id="legalitas" class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
@@ -426,7 +441,7 @@
                             <i data-lucide="check-square" class="w-6 h-6"></i>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900">Sistem Presensi Digital Az-Zahro</h3>
-                        <p class="text-gray-600 text-xs leading-relaxed">Portal pemantauan absensi kehadiran harian siswa dan dewan guru secara berkala, akurat, dan mendukung sinkronisasi data offline.</p>
+                        <p class="text-gray-600 text-xs leading-relaxed">Portal pemantauan absensi kehadiran harian siswa dan dewan guru secara berkala, akurat, and mendukung sinkronisasi data offline.</p>
                     </div>
                     <div class="pt-6">
                         <a href="https://azzahrolocare.github.io/presensi-smp-smk-azzahro/" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-white bg-emerald-deep hover:bg-emerald-medium px-4 py-2.5 rounded-lg transition-colors shadow-sm">
@@ -444,7 +459,7 @@
                 
                 <div class="lg:col-span-5 space-y-6">
                     <div>
-                        <span class="text-emerald-deep font-semibold text-sm tracking-wider uppercase bg-emerald-light px-3 py-1 rounded inline-block">Hubungi Kami</span>
+                        <span class="text-emerald-deep font-semibold text-sm tracking-wider uppercase bg-emerald-light px-3 py-1 inline-block">Hubungi Kami</span>
                         <h2 class="mt-3 text-3xl font-serif-custom font-bold text-gray-900">Pintu Konsultasi Pendaftaran Selalu Terbuka</h2>
                         <p class="mt-3 text-gray-600 text-sm leading-relaxed">Silakan menghubungi layanan humas kami atau mengisi formulir untuk seputar informasi PPDB dan administrasi sekolah.</p>
                     </div>
@@ -533,6 +548,7 @@
                     <ul class="space-y-2 text-xs text-emerald-light">
                         <li><a href="#beranda" class="hover:text-white transition-colors">Halaman Utama</a></li>
                         <li><a href="#sambutan" class="hover:text-white transition-colors">Sambutan Kepala Sekolah</a></li>
+                        <li><a href="#berita" class="hover:text-white transition-colors">Berita Utama</a></li>
                         <li><a href="#legalitas" class="hover:text-white transition-colors">Profil Legalitas</a></li>
                         <li><a href="#layanan" class="hover:text-white transition-colors">Ekosistem Digital</a></li>
                     </ul>
@@ -662,6 +678,56 @@
                 nav.classList.add('py-3');
             }
         });
+
+        // ==================== LOGIKA MEMANGGIL DATA ARTIKEL JSON ====================
+        fetch('artikel.json')
+            .then(response => {
+                if (!response.ok) throw new Error('Gagal memuat berkas JSON artikel');
+                return response.json();
+            })
+            .then(data => {
+                const container = document.getElementById('blog-container');
+                container.innerHTML = ''; // Bersihkan tulisan loading
+                
+                if(data.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-500 text-sm">Belum ada berita saat ini.</p>';
+                    return;
+                }
+
+                data.forEach(artikel => {
+                    const itemHTML = `
+                        <div class="flex flex-col md:flex-row items-start gap-6 border-b border-gray-100 pb-8 last:border-0 last:pb-0 group">
+                            <div class="w-full md:w-1/3 overflow-hidden rounded-xl bg-gray-100 border border-gray-100 shadow-sm flex-shrink-0">
+                                <img src="${artikel.gambar}" alt="${artikel.judul}" class="w-full h-48 md:h-36 object-cover group-hover:scale-105 transition-transform duration-300">
+                            </div>
+                            <div class="w-full md:w-2/3 flex flex-col justify-between h-full space-y-2">
+                                <a href="${artikel.link_detail}" class="text-xl font-bold text-gray-900 font-serif-custom leading-snug group-hover:text-emerald-deep transition-colors">
+                                    ${artikel.judul}
+                                </a>
+                                <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                    ${artikel.ringkasan}
+                                </p>
+                                <div class="flex items-center gap-1 text-xs text-gray-400 font-medium pt-1">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                    <span>${artikel.tanggal}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += itemHTML;
+                });
+                
+                // Refresh Lucide Icons untuk merender ikon kalender yang baru ditambahkan secara dinamis
+                lucide.createIcons();
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById('blog-container').innerHTML = `
+                    <div class="text-center text-red-500 text-sm font-medium py-4">
+                        ⚠️ Gagal memuat daftar berita. Pastikan file 'artikel.json' sudah diupload dengan benar.
+                    </div>
+                `;
+            });
     </script>
 </body>
 </html>
