@@ -43,13 +43,6 @@
             background-color: rgba(15, 81, 50, 0.95);
             backdrop-filter: blur(10px);
         }
-        .bg-islamic-pattern {
-            background-color: #0f5132;
-            background-image: radial-gradient(rgba(212, 175, 55, 0.15) 1px, transparent 0),
-                              radial-gradient(rgba(212, 175, 55, 0.15) 1px, transparent 0);
-            background-size: 24px 24px;
-            background-position: 0 0, 12px 12px;
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased selection:bg-emerald-deep selection:text-white">
@@ -197,6 +190,7 @@
             </div>
         </div>
     </section>
+
     <section id="legalitas" class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
@@ -441,7 +435,7 @@
                             <i data-lucide="check-square" class="w-6 h-6"></i>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900">Sistem Presensi Digital Az-Zahro</h3>
-                        <p class="text-gray-600 text-xs leading-relaxed">Portal pemantauan absensi kehadiran harian siswa dan dewan guru secara berkala, akurat, and mendukung sinkronisasi data offline.</p>
+                        <p class="text-gray-600 text-xs leading-relaxed">Portal pemantauan absensi kehadiran harian siswa dan dewan guru secara berkala, akurat, dan mendukung sinkronisasi data offline.</p>
                     </div>
                     <div class="pt-6">
                         <a href="https://azzahrolocare.github.io/presensi-smp-smk-azzahro/" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-white bg-emerald-deep hover:bg-emerald-medium px-4 py-2.5 rounded-lg transition-colors shadow-sm">
@@ -577,7 +571,6 @@
     </footer>
 
     <script>
-        // Initialize Lucide Icons
         lucide.createIcons();
 
         // Mobile Menu Toggle
@@ -612,26 +605,14 @@
             });
         }
 
-        function nextSlide() {
-            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-            showSlide(currentSlideIndex);
-        }
-
-        function prevSlide() {
-            currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
-            showSlide(currentSlideIndex);
-        }
-
-        // Auto slide change every 6 seconds
+        function nextSlide() { currentSlideIndex = (currentSlideIndex + 1) % slides.length; showSlide(currentSlideIndex); }
+        function prevSlide() { currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length; showSlide(currentSlideIndex); }
         setInterval(nextSlide, 6000);
 
-        // Interactive Tabs Switcher
+        // Tabs Switcher
         function switchTab(tabName) {
             const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => {
-                content.classList.add('hidden');
-                content.classList.remove('block');
-            });
+            contents.forEach(content => { content.classList.add('hidden'); content.classList.remove('block'); });
 
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => {
@@ -640,10 +621,7 @@
             });
 
             const activeContent = document.getElementById(`content-${tabName}`);
-            if (activeContent) {
-                activeContent.classList.remove('hidden');
-                activeContent.classList.add('block');
-            }
+            if (activeContent) { activeContent.classList.remove('hidden'); activeContent.classList.add('block'); }
 
             const activeBtn = document.getElementById(`btn-${tabName}`);
             if (activeBtn) {
@@ -652,42 +630,30 @@
             }
         }
 
-        // Form Submit Handler
+        // Form PPDB Handler
         function handleFormSubmit(event) {
             event.preventDefault();
             const form = document.getElementById('contact-form');
             const alertBox = document.getElementById('contact-success-alert');
-            
             alertBox.classList.remove('hidden');
             form.reset();
             alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            setTimeout(() => {
-                alertBox.classList.add('hidden');
-            }, 8000);
+            setTimeout(() => { alertBox.classList.add('hidden'); }, 8000);
         }
 
-        // Scroll Navbar Optimization
+        // Scroll Navbar
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.classList.add('py-1', 'shadow-lg');
-                nav.classList.remove('py-3');
-            } else {
-                nav.classList.remove('py-1', 'shadow-lg');
-                nav.classList.add('py-3');
-            }
+            if (window.scrollY > 50) { nav.classList.add('py-1', 'shadow-lg'); nav.classList.remove('py-3'); }
+            else { nav.classList.remove('py-1', 'shadow-lg'); nav.classList.add('py-3'); }
         });
 
-        // ==================== LOGIKA MEMANGGIL DATA ARTIKEL JSON ====================
+        // ==================== LOGIKA MEMANGGIL ARTIKEL UTAMA & OTOMATISASI BASE64 ====================
         fetch('artikel.json')
-            .then(response => {
-                if (!response.ok) throw new Error('Gagal memuat berkas JSON artikel');
-                return response.json();
-            })
+            .then(response => { if (!response.ok) throw new Error('Gagal memuat daftar berita'); return response.json(); })
             .then(data => {
                 const container = document.getElementById('blog-container');
-                container.innerHTML = ''; // Bersihkan tulisan loading
+                container.innerHTML = '';
                 
                 if(data.length === 0) {
                     container.innerHTML = '<p class="text-center text-gray-500 text-sm">Belum ada berita saat ini.</p>';
@@ -695,13 +661,17 @@
                 }
 
                 data.forEach(artikel => {
+                    // OTOMATISASI: Mengonversi string penunjuk nama (misal: 'fileartikel1') menjadi Base64
+                    const namaFileBase64 = btoa(artikel.link_detail);
+                    const linkTarget = `view/?file=${namaFileBase64}`;
+
                     const itemHTML = `
                         <div class="flex flex-col md:flex-row items-start gap-6 border-b border-gray-100 pb-8 last:border-0 last:pb-0 group">
                             <div class="w-full md:w-1/3 overflow-hidden rounded-xl bg-gray-100 border border-gray-100 shadow-sm flex-shrink-0">
                                 <img src="${artikel.gambar}" alt="${artikel.judul}" class="w-full h-48 md:h-36 object-cover group-hover:scale-105 transition-transform duration-300">
                             </div>
                             <div class="w-full md:w-2/3 flex flex-col justify-between h-full space-y-2">
-                                <a href="${artikel.link_detail}" class="text-xl font-bold text-gray-900 font-serif-custom leading-snug group-hover:text-emerald-deep transition-colors">
+                                <a href="${linkTarget}" class="text-xl font-bold text-gray-900 font-serif-custom leading-snug group-hover:text-emerald-deep transition-colors">
                                     ${artikel.judul}
                                 </a>
                                 <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
@@ -716,16 +686,11 @@
                     `;
                     container.innerHTML += itemHTML;
                 });
-                
-                // Refresh Lucide Icons untuk merender ikon kalender yang baru ditambahkan secara dinamis
                 lucide.createIcons();
             })
             .catch(error => {
-                console.error(error);
                 document.getElementById('blog-container').innerHTML = `
-                    <div class="text-center text-red-500 text-sm font-medium py-4">
-                        ⚠️ Gagal memuat daftar berita. Pastikan file 'artikel.json' sudah diupload dengan benar.
-                    </div>
+                    <div class="text-center text-red-500 text-sm py-4">⚠️ Gagal memuat daftar berita harian sekolah.</div>
                 `;
             });
     </script>
