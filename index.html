@@ -648,7 +648,7 @@
             else { nav.classList.remove('py-1', 'shadow-lg'); nav.classList.add('py-3'); }
         });
 
-        // ==================== LOGIKA MEMANGGIL ARTIKEL UTAMA & OTOMATISASI BASE64 ====================
+        // ==================== LOGIKA MEMANGGIL ARTIKEL UTAMA (MURNI TEKS BIASA) ====================
         fetch('artikel.json')
             .then(response => { if (!response.ok) throw new Error('Gagal memuat daftar berita'); return response.json(); })
             .then(data => {
@@ -661,9 +661,8 @@
                 }
 
                 data.forEach(artikel => {
-                    // OTOMATISASI: Mengonversi string penunjuk nama (misal: 'fileartikel1') menjadi Base64
-                    const namaFileBase64 = btoa(artikel.link_detail);
-                    const linkTarget = `view/?file=${namaFileBase64}`;
+                    // PENGHAPUSAN BASE64: Langsung memasukkan string nama bersih ke URL parameter
+                    const linkTarget = `view/?file=${artikel.link_detail}`;
 
                     const itemHTML = `
                         <div class="flex flex-col md:flex-row items-start gap-6 border-b border-gray-100 pb-8 last:border-0 last:pb-0 group">
